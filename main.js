@@ -1,9 +1,10 @@
-const arena = document.getElementsByClassName('arenas').item(0);
+const arena = document.querySelector('.arenas');
+const randomButton = document.querySelector('.button');
 
 const nikita = {
     player: 1,
     name: 'Scorpion',
-    hp: 23,
+    hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
     weapon: ['kunai', 'shuriken'],
     attack: () => console.log(nikita.name + ' Fight...')
@@ -12,7 +13,7 @@ const nikita = {
 const eugene = {
     player: 2,
     name: 'Sub-Zero',
-    hp: 49,
+    hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
     weapon: ['spear', 'axe'],
     attack: () => console.log(eugene.name + ' Fight...')
@@ -42,6 +43,35 @@ const createPlayer = ({player, name, hp, img}) => {
 
     return divPlayer;
 }
+
+const changeHp = (player) => {
+    let playerLife = document.querySelector(`.player${player.player} .life`);
+    player.hp -= Math.ceil(Math.random()*20);
+    if (player.hp <= 0) {
+        player.hp = 0;
+        randomButton.disabled = true;
+    }
+    playerLife.style.width = `${player.hp}%`;
+}
+
+const playerStatus = (name, lose = false) => {
+    const loseTitle = createElement('div', 'loseTitle');
+    loseTitle.innerText = `${name} ${lose ? 'lose' : ' wins'}`;
+    return loseTitle;
+}
+
+const getWinner = (player1, player2) => {
+    return player1.hp === 0 ? player2.name : player2.hp === 0 ? player1.name : '';
+}
+
+randomButton.addEventListener('click', () => {
+    changeHp(nikita);
+    changeHp(eugene);
+    let winnerName = getWinner(nikita, eugene);
+    if (winnerName) {
+        arena.append(playerStatus(winnerName));
+    }
+})
 
 arena.append(createPlayer(nikita));
 arena.append(createPlayer(eugene));
