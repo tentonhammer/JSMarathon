@@ -14,6 +14,8 @@ const eugene = {
     attack: () => console.log(eugene.name + ' Fight...')
 }
 
+const arena = document.getElementsByClassName('arenas').item(0);
+
 const createPlayer = (_className, {name, hp, img}) => {
     let player = document.createElement('div');
     player.classList.add(_className);
@@ -32,8 +34,7 @@ const createPlayer = (_className, {name, hp, img}) => {
     player.append(progress, character);
     progress.append(divLife, divName);
     character.append(divImg);
-    let arena = document.getElementsByClassName('arenas');
-    arena.item(0).append(player);
+    arena.append(player);
 }
 
 createPlayer('player1', nikita);
