@@ -46,7 +46,7 @@ const createPlayer = ({player, name, hp, img}) => {
 
 const changeHp = (player) => {
     let playerLife = document.querySelector(`.player${player.player} .life`);
-    player.hp -= Math.ceil(Math.random()*20);
+    player.hp -= random(20);
     if (player.hp <= 0) {
         player.hp = 0;
         randomButton.disabled = true;
@@ -62,6 +62,10 @@ const playerStatus = (name, lose = false) => {
 
 const getWinner = (player1, player2) => {
     return player1.hp === 0 ? player2.name : player2.hp === 0 ? player1.name : '';
+}
+
+const random = (num) => {
+    return Math.ceil(Math.random() * num)
 }
 
 randomButton.addEventListener('click', () => {
