@@ -49,7 +49,6 @@ const changeHp = (player) => {
     player.hp -= random(20);
     if (player.hp <= 0) {
         player.hp = 0;
-        randomButton.disabled = true;
     }
     playerLife.style.width = `${player.hp}%`;
 }
@@ -75,6 +74,9 @@ const random = (num) => {
 randomButton.addEventListener('click', () => {
     changeHp(nikita);
     changeHp(eugene);
+    if (nikita.hp === 0 || eugene.hp === 0) {
+        randomButton.disabled = true;
+    }
     let statusText = getWinner(nikita, eugene);
     if (statusText) {
         arena.append(winnerStatus(statusText));
