@@ -54,14 +54,18 @@ const changeHp = (player) => {
     playerLife.style.width = `${player.hp}%`;
 }
 
-const playerStatus = (name, lose = false) => {
+const winnerStatus = (text, lose = false) => {
     const loseTitle = createElement('div', 'loseTitle');
-    loseTitle.innerText = `${name} ${lose ? 'lose' : ' wins'}`;
+    if (text !== 'draw') {
+        loseTitle.innerText = `${text} ${lose ? 'lose' : ' wins'}`;
+    } else {
+        loseTitle.innerText = `${text}`;
+    }
     return loseTitle;
 }
 
 const getWinner = (player1, player2) => {
-    return player1.hp === 0 ? player2.name : player2.hp === 0 ? player1.name : '';
+    return player1.hp === 0 && player2.hp === 0 ? 'draw' : player1.hp === 0 ? player2.name : player2.hp === 0 ? player1.name : '';
 }
 
 const random = (num) => {
@@ -71,9 +75,9 @@ const random = (num) => {
 randomButton.addEventListener('click', () => {
     changeHp(nikita);
     changeHp(eugene);
-    let winnerName = getWinner(nikita, eugene);
-    if (winnerName) {
-        arena.append(playerStatus(winnerName));
+    let statusText = getWinner(nikita, eugene);
+    if (statusText) {
+        arena.append(winnerStatus(statusText));
     }
 })
 
