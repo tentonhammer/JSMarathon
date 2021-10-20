@@ -1,13 +1,32 @@
 const arena = document.querySelector('.arenas');
 const randomButton = document.querySelector('.button');
 
+function renderHP() {
+    this.elHP().style.width = `${this.hp}%`;
+}
+
+function elHP() {
+    return document.querySelector(`.player${this.player} .life`);
+}
+
+function changeHp(hp) {
+    this.hp -= hp;
+    if (this.hp <= 0) {
+        this.hp = 0;
+    }
+    this.renderHP();
+}
+
 const nikita = {
     player: 1,
     name: 'Scorpion',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
     weapon: ['kunai', 'shuriken'],
-    attack: () => console.log(nikita.name + ' Fight...')
+    attack: () => console.log(nikita.name + ' Fight...'),
+    changeHp: changeHp,
+    elHP: elHP,
+    renderHP: renderHP
 }
 
 const eugene = {
@@ -16,7 +35,10 @@ const eugene = {
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
     weapon: ['spear', 'axe'],
-    attack: () => console.log(eugene.name + ' Fight...')
+    attack: () => console.log(eugene.name + ' Fight...'),
+    changeHp: changeHp,
+    elHP: elHP,
+    renderHP: renderHP
 }
 
 const createElement = (tagName, className) => {
@@ -44,13 +66,8 @@ const createPlayer = ({player, name, hp, img}) => {
     return divPlayer;
 }
 
-const changeHp = (player) => {
-    let playerLife = document.querySelector(`.player${player.player} .life`);
-    player.hp -= random(20);
-    if (player.hp <= 0) {
-        player.hp = 0;
-    }
-    playerLife.style.width = `${player.hp}%`;
+const random = (num) => {
+    return Math.ceil(Math.random() * num)
 }
 
 const winnerStatus = (text, lose = false) => {
@@ -67,15 +84,23 @@ const getWinner = (player1, player2) => {
     return player1.hp === 0 && player2.hp === 0 ? 'draw' : player1.hp === 0 ? player2.name : player2.hp === 0 ? player1.name : '';
 }
 
-const random = (num) => {
-    return Math.ceil(Math.random() * num)
+function createReloadButton() {
+    let wrap = createElement('div', 'reloadWrap');
+    let button = createElement('button', 'button');
+    button.innerText = 'Reload';
+    wrap.append(button);
+    button.onclick = function () {
+        window.location.reload()
+    }
+    arena.append(wrap);
 }
 
 randomButton.addEventListener('click', () => {
-    changeHp(nikita);
-    changeHp(eugene);
+    nikita.changeHp(random(20));
+    eugene.changeHp(random(20));
     if (nikita.hp === 0 || eugene.hp === 0) {
         randomButton.disabled = true;
+        createReloadButton();
     }
     let statusText = getWinner(nikita, eugene);
     if (statusText) {
