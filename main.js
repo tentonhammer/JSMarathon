@@ -1,5 +1,12 @@
 const arena = document.querySelector('.arenas');
-const randomButton = document.querySelector('.button');
+const fightButton = document.querySelector('.button');
+const form = document.querySelector('.control');
+const HIT = {
+    head: 30,
+    body: 25,
+    foot: 20,
+}
+const ATTACK = ['head', 'body', 'foot'];
 
 function renderHP() {
     this.elHP().style.width = `${this.hp}%`;
@@ -17,28 +24,28 @@ function changeHp(hp) {
     this.renderHP();
 }
 
-const nikita = {
+const player = {
     player: 1,
     name: 'Scorpion',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
     weapon: ['kunai', 'shuriken'],
-    attack: () => console.log(nikita.name + ' Fight...'),
-    changeHp: changeHp,
-    elHP: elHP,
-    renderHP: renderHP
+    attack: () => console.log(this.name + ' Fight...'),
+    changeHp,
+    elHP,
+    renderHP
 }
 
-const eugene = {
+const computer = {
     player: 2,
     name: 'Sub-Zero',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
     weapon: ['spear', 'axe'],
-    attack: () => console.log(eugene.name + ' Fight...'),
-    changeHp: changeHp,
-    elHP: elHP,
-    renderHP: renderHP
+    attack: enemyAttack(),
+    changeHp,
+    elHP,
+    renderHP
 }
 
 const createElement = (tagName, className) => {
@@ -95,18 +102,57 @@ function createReloadButton() {
     arena.append(wrap);
 }
 
-randomButton.addEventListener('click', () => {
-    nikita.changeHp(random(20));
-    eugene.changeHp(random(20));
-    if (nikita.hp === 0 || eugene.hp === 0) {
-        randomButton.disabled = true;
+// Computer player
+const enemyAttack = () => {
+    const hit = ATTACK[random(3) - 1];
+    const defence = ATTACK[random(3) - 1];
+    const value = HIT[hit];
+    return {
+        hit, value, defence
+    }
+}
+
+const playerAttack = () => {
+    const player = {};
+    for (let elem of form) {
+        if (elem.checked) {
+            if (elem.name === 'hit') {
+                player.hit = elem.value;
+                player.value = random(HIT[elem.value]);
+            }
+            if (elem.name === 'defence') {
+                player.defence = elem.value;
+            }
+        }
+        elem.checked = false;
+    }
+    return player;
+}
+
+const onSubmit = (event) => {
+    event.preventDefault();
+
+    const computerFight = enemyAttack();
+    const playerFight = playerAttack();
+
+    if (computerFight.hit !== playerFight.defence) {
+        player.changeHp(computerFight.value);
+    }
+    if (playerFight.hit !== computerFight.defence) {
+        computer.changeHp(playerFight.value);
+    }
+
+    if (player.hp === 0 || computer.hp === 0) {
+        fightButton.disabled = true;
         createReloadButton();
     }
-    let statusText = getWinner(nikita, eugene);
+    let statusText = getWinner(player, computer);
     if (statusText) {
         arena.append(winnerStatus(statusText));
     }
-})
+}
 
-arena.append(createPlayer(nikita));
-arena.append(createPlayer(eugene));
+arena.append(createPlayer(player));
+arena.append(createPlayer(computer));
+
+form.addEventListener('submit', onSubmit);
