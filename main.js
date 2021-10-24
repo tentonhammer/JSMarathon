@@ -191,8 +191,8 @@ const playerAttack = () => {
  * @see logs
  */
 const generateLogs = (type, player1, player2, damage) => {
-    const date = new Date();
-    const time = `${date.getHours()}:${date.getMinutes()}`;
+    const timeString = (new Date()).toLocaleTimeString();
+    const time = timeString.substring(0, 5);
     let text = '';
     switch (type) {
         case 'hit':
