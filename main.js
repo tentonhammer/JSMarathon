@@ -130,7 +130,18 @@ const winnerStatus = (text, lose = false) => {
 }
 
 const getWinner = (player1, player2) => {
-    return player1.hp === 0 && player2.hp === 0 ? 'draw' : player1.hp === 0 ? player2.name : player2.hp === 0 ? player1.name : '';
+    if (player1.hp === 0 && player2.hp === 0) {
+        generateLogs('draw');
+        return 'draw';
+    }
+    if (player1.hp === 0) {
+        generateLogs('end', player1, player2);
+        return player2.name;
+    }
+    if (player2.hp === 0) {
+        generateLogs('end', player2, player1);
+        return player1.name;
+    }
 }
 
 function createReloadButton() {
@@ -185,9 +196,12 @@ const generateLogs = (type, player1, player2, damage) => {
     let text = '';
     switch (type) {
         case 'hit':
-        case 'defence':
-            text = logs[type][random(logs[type].length - 1)].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name).replace('[time]', time);
+            text = logs[type][random(logs[type].length - 1)].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
             text = `${time} - ${text} -${damage} [${player2.hp}/100]`;
+            break;
+        case 'defence':
+            text = logs[type][random(logs[type].length - 1)].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
+            text = `${time} - ${text}`;
             break;
         case 'end':
             text = logs[type][random(logs[type].length - 1)].replace('[playerLose]', player1.name).replace('[playerWins]', player2.name);
@@ -212,14 +226,17 @@ const onSubmit = (event) => {
     if (computerFight.hit !== playerFight.defence) {
         player.changeHp(computerFight.value);
         generateLogs('hit', computer, player, computerFight.value);
+    } else {
+        generateLogs('defence', computer, player);
     }
     if (playerFight.hit !== computerFight.defence) {
         computer.changeHp(playerFight.value);
         generateLogs('hit', player, computer, playerFight.value);
+    } else {
+        generateLogs('defence', player, computer);
     }
 
     if (player.hp === 0 || computer.hp === 0) {
-        generateLogs('end', player, computer);
         fightButton.disabled = true;
         createReloadButton();
     }
