@@ -115,9 +115,7 @@ const createPlayer = ({player, name, hp, img}) => {
     return divPlayer;
 }
 
-const random = (num) => {
-    return Math.ceil(Math.random() * num)
-}
+const random = (num) => Math.ceil(Math.random() * num);
 
 const winnerStatus = (text, lose = false) => {
     const loseTitle = createElement('div', 'loseTitle');
@@ -190,24 +188,24 @@ const playerAttack = () => {
  * @param damage description is unnecessary ;)
  * @see logs
  */
-const generateLogs = (type, player1, player2, damage) => {
+const generateLogs = (type, {name: player1Name} = null, {name: player2Name, hp: player2Hp} = null, damage = null) => {
     const timeString = (new Date()).toLocaleTimeString();
     const time = timeString.substring(0, 5);
     let text = '';
     switch (type) {
         case 'hit':
-            text = logs[type][random(logs[type].length - 1)].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
-            text = `${time} - ${text} -${damage} [${player2.hp}/100]`;
+            text = logs[type][random(logs[type].length - 1)].replace('[playerKick]', player1Name).replace('[playerDefence]', player2Name);
+            text = `${time} - ${text} -${damage} [${player2Hp}/100]`;
             break;
         case 'defence':
-            text = logs[type][random(logs[type].length - 1)].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
+            text = logs[type][random(logs[type].length - 1)].replace('[playerKick]', player1Name).replace('[playerDefence]', player2Name);
             text = `${time} - ${text}`;
             break;
         case 'end':
-            text = logs[type][random(logs[type].length - 1)].replace('[playerLose]', player1.name).replace('[playerWins]', player2.name);
+            text = logs[type][random(logs[type].length - 1)].replace('[playerLose]', player1Name).replace('[playerWins]', player2Name);
             break;
         case 'start':
-            text = logs[type].replace('[player1]', player1.name).replace('[player2]', player2.name).replace('[time]', time);
+            text = logs[type].replace('[player1]', player1Name).replace('[player2]', player2Name).replace('[time]', time);
             break;
         case 'draw':
             text = logs[type];
@@ -220,18 +218,18 @@ const generateLogs = (type, player1, player2, damage) => {
 const onSubmit = (event) => {
     event.preventDefault();
 
-    const computerFight = enemyAttack();
-    const playerFight = playerAttack();
+    const {hit: eHit, value: eValue, defence: eDefence} = enemyAttack();
+    const {hit: pHit, value: pValue, defence: pDefence} = playerAttack();
 
-    if (computerFight.hit !== playerFight.defence) {
-        player.changeHp(computerFight.value);
-        generateLogs('hit', computer, player, computerFight.value);
+    if (eHit !== pDefence) {
+        player.changeHp(eValue);
+        generateLogs('hit', computer, player, eValue);
     } else {
         generateLogs('defence', computer, player);
     }
-    if (playerFight.hit !== computerFight.defence) {
-        computer.changeHp(playerFight.value);
-        generateLogs('hit', player, computer, playerFight.value);
+    if (pHit !== eDefence) {
+        computer.changeHp(pValue);
+        generateLogs('hit', player, computer, pValue);
     } else {
         generateLogs('defence', player, computer);
     }
