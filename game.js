@@ -1,5 +1,5 @@
-import {computer, createPlayer, player, Player} from "./players.js";
-import {createReloadButton, generateLogs} from "./utils.js";
+import {createPlayer, Player} from "./players.js";
+import {createReloadButton, generateLogs, random} from "./utils.js";
 import {enemyAttack, getWinner, playerAttack, winnerStatus} from "./fight.js";
 import RequestService from "./request-service.js";
 
@@ -11,10 +11,21 @@ export default class Game {
         this.requestService = new RequestService();
     }
 
-    player1 = new Player(player);
-    player2 = new Player(computer);
+    player1;
+    player2;
 
-    start = () => {
+    start = async () => {
+        const players = await this.requestService.getPlayers();
+        const p1 = players[random(players.length - 1)];
+        const p2 = players[random(players.length - 1)];
+        this.player1 = new Player({
+            ...p1,
+            player: 1
+        });
+        this.player2 = new Player({
+            ...p2,
+            player: 2
+        });
         // Creating players
         this.arena.append(createPlayer(this.player1));
         this.arena.append(createPlayer(this.player2));
