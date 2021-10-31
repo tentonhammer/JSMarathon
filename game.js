@@ -3,9 +3,12 @@ import {createReloadButton, generateLogs} from "./utils.js";
 import {enemyAttack, getWinner, playerAttack, winnerStatus} from "./fight.js";
 
 export default class Game {
-    arena = document.querySelector('.arenas');
-    fightButton = document.querySelector('.button');
-    form = document.querySelector('.control');
+    constructor() {
+        this.arena = document.querySelector('.arenas');
+        this.fightButton = document.querySelector('.button');
+        this.form = document.querySelector('.control');
+    }
+
     player1 = new Player(player);
     player2 = new Player(computer);
 
