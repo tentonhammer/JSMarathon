@@ -15,7 +15,7 @@ class RequestService {
                 hit,
                 defence,
             })
-        });
+        }).then(response => response.json());
     }
 }
 
