@@ -1,15 +1,40 @@
 import {createElement} from "./utils.js";
 
+class Player {
+    constructor(props) {
+        this.player = props.player;
+        this.name = props.name;
+        this.hp = props.hp;
+        this.img = props.img;
+    }
+
+    attack = () => {
+        console.log(this.name + ' Fight...')
+    }
+
+    renderHP = () => {
+        this.elHP().style.width = `${this.hp}%`;
+    }
+
+    elHP = () => {
+        return document.querySelector(`.player${this.player} .life`);
+    }
+
+    changeHp = (hp) => {
+        this.hp -= hp;
+        if (this.hp <= 0) {
+            this.hp = 0;
+        }
+        this.renderHP();
+    }
+}
+
 const player = {
     player: 1,
     name: 'Scorpion',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-    weapon: ['kunai', 'shuriken'],
-    attack: () => console.log(this.name + ' Fight...'),
-    changeHp,
-    elHP,
-    renderHP
+    weapon: ['kunai', 'shuriken']
 }
 
 const computer = {
@@ -17,27 +42,7 @@ const computer = {
     name: 'Sub-Zero',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-    weapon: ['spear', 'axe'],
-    attack: () => console.log(this.name + ' Fight...'),
-    changeHp,
-    elHP,
-    renderHP
-}
-
-function renderHP() {
-    this.elHP().style.width = `${this.hp}%`;
-}
-
-function elHP() {
-    return document.querySelector(`.player${this.player} .life`);
-}
-
-function changeHp(hp) {
-    this.hp -= hp;
-    if (this.hp <= 0) {
-        this.hp = 0;
-    }
-    this.renderHP();
+    weapon: ['spear', 'axe']
 }
 
 const createPlayer = ({player, name, hp, img}) => {
@@ -57,4 +62,4 @@ const createPlayer = ({player, name, hp, img}) => {
     return divPlayer;
 }
 
-export {player, computer, createPlayer}
+export {player, computer, createPlayer, Player}
