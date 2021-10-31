@@ -1,6 +1,6 @@
 import {createPlayer, Player} from "./players.js";
 import {createReloadButton, generateLogs, random} from "./utils.js";
-import {enemyAttack, getWinner, playerAttack, winnerStatus} from "./fight.js";
+import {getWinner, playerAttack, winnerStatus} from "./fight.js";
 import RequestService from "./request-service.js";
 
 export default class Game {
@@ -16,7 +16,10 @@ export default class Game {
 
     start = async () => {
         const players = await this.requestService.getPlayers();
-        const p1 = players[random(players.length - 1)];
+
+        // Get chosen character from localStorage
+        const savedPlayer = JSON.parse(localStorage.getItem('player1'));
+        const p1 = savedPlayer ? savedPlayer : players[random(players.length - 1)];
         const p2 = players[random(players.length - 1)];
         this.player1 = new Player({
             ...p1,
@@ -29,16 +32,17 @@ export default class Game {
         // Creating players
         this.arena.append(createPlayer(this.player1));
         this.arena.append(createPlayer(this.player2));
+
         // Show start message
         generateLogs('start', this.player1, this.player2);
         this.form.addEventListener('submit', this.onSubmit);
     }
 
-    onSubmit = (event) => {
+    onSubmit = async (event) => {
         event.preventDefault();
 
-        const {hit: eHit, value: eValue, defence: eDefence} = enemyAttack();
-        const {hit: pHit, value: pValue, defence: pDefence} = playerAttack();
+        const player = playerAttack();
+        const {player1: {hit: pHit, value: pValue, defence: pDefence}, player2: {hit: eHit, value: eValue, defence: eDefence}} = await this.requestService.fight(player);
 
         if (eHit !== pDefence) {
             this.player1.changeHp(eValue);
