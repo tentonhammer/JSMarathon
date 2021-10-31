@@ -1,12 +1,14 @@
 import {computer, createPlayer, player, Player} from "./players.js";
 import {createReloadButton, generateLogs} from "./utils.js";
 import {enemyAttack, getWinner, playerAttack, winnerStatus} from "./fight.js";
+import RequestService from "./request-service.js";
 
 export default class Game {
     constructor() {
         this.arena = document.querySelector('.arenas');
         this.fightButton = document.querySelector('.button');
         this.form = document.querySelector('.control');
+        this.requestService = new RequestService();
     }
 
     player1 = new Player(player);
