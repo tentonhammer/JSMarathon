@@ -56,10 +56,10 @@ const createReloadButton = () => {
     }
     let wrap = createElement('div', 'reloadWrap');
     let button = createElement('button', 'button');
-    button.innerText = 'Reload';
+    button.innerText = 'Restart';
     wrap.append(button);
     button.onclick = function () {
-        window.location.reload()
+        window.location = 'index.html';
     }
     arena.append(wrap);
 }
