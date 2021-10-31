@@ -20,7 +20,7 @@ export default class Game {
         // Get chosen character from localStorage
         const savedPlayer = JSON.parse(localStorage.getItem('player1'));
         const p1 = savedPlayer ? savedPlayer : players[random(players.length - 1)];
-        const p2 = players[random(players.length - 1)];
+        const p2 = await this.requestService.getRandomPlayer();
         this.player1 = new Player({
             ...p1,
             player: 1
