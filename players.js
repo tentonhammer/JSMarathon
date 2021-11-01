@@ -29,22 +29,6 @@ class Player {
     }
 }
 
-const player = {
-    player: 1,
-    name: 'Scorpion',
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-    weapon: ['kunai', 'shuriken']
-}
-
-const computer = {
-    player: 2,
-    name: 'Sub-Zero',
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-    weapon: ['spear', 'axe']
-}
-
 const createPlayer = ({player, name, hp, img}) => {
     let divPlayer = createElement('div', `player${player}`);
     let progress = createElement('div', 'progressbar');
@@ -62,4 +46,4 @@ const createPlayer = ({player, name, hp, img}) => {
     return divPlayer;
 }
 
-export {player, computer, createPlayer, Player}
+export {createPlayer, Player}
