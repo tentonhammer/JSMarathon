@@ -53,17 +53,11 @@ async function init() {
         });
 
         el.addEventListener('click', () => {
-            //TODO: Мы кладем нашего игрока в localStorage что бы потом на арене его достать.
-            // При помощи localStorage.getItem('player1'); т.к. в localStorage кладется строка,
-            // то мы должны ее распарсить обратным методом JSON.parse(localStorage.getItem('player1'));
-            // но это уже будет в нашем классе Game когда мы инициализируем игроков.
             localStorage.setItem('player1', JSON.stringify(item));
 
             el.classList.add('active');
-            console.log(123)
             setTimeout(() => {
-                window.location = './arenas.html';
-                console.log(123)
+                window.location = 'arenas.html';
             }, 1000);
         });
 
